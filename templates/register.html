@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Job Hai</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo"> Job Hai</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url 'login_view' %}">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Register</h2>
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="tel" name="phone" placeholder="Phone Number">
+                
+                <select name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="seeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+                
+                <input type="text" name="company_name" placeholder="Company Name (for Employers)">
+                
+                <button type="submit" class="btn-submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="{% url 'login_view' %}">Login</a></p>
+        </div>
+    </section>
+</body>
+</html>

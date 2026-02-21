@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company_name }} - Job Hai</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo"> Job Hai</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="company-section">
+        <div class="container">
+            <div class="company-header">
+                <h1>🏢 {{ company_name }}</h1>
+                <p>Total Jobs: {{ jobs.count }}</p>
+            </div>
+
+            <h2 class="section-title">Jobs at {{ company_name }}</h2>
+            <div class="jobs-grid">
+                {% for job in jobs %}
+                <div class="job-card">
+                    <div class="job-image">
+                        <img src="{{ job.image }}" alt="{{ job.company }}">
+                    </div>
+                    <div class="job-content">
+                        <h3 class="job-title">{{ job.title }}</h3>
+                        <p class="job-location">📍 {{ job.location }}</p>
+                        <p class="job-salary">💰 {{ job.salary }}</p>
+                        <a href="{% url 'job_detail' job.pk %}" class="btn-apply">View Details</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="no-jobs">No jobs available from this company</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Job Hai. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

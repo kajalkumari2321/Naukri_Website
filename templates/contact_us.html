@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - SHANDILYA CONSULTANCY</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">SHANDILYA CONSULTANCY</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="contact-section">
+        <div class="container">
+            <h1 class="page-title">Contact Us</h1>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>We're here to help! Reach out to us for any queries or assistance.</p>
+                    
+                    <div class="contact-item">
+                        <h3>📞 Phone</h3>
+                        <p><a href="tel:9155273338">9155273338</a></p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h3>📧 Email</h3>
+                        <p><a href="mailto:info@shandilyagroup.com">info@shandilyagroup.com</a></p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h3>📍 Location</h3>
+                        <p>Sitamarhi, Bihar</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h3>🕒 Working Hours</h3>
+                        <p>Monday - Saturday: 9:00 AM - 6:00 PM</p>
+                        <p>Sunday: Closed</p>
+                    </div>
+                </div>
+
+                <div class="contact-form-box">
+                    <h2>Send Us a Message</h2>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="POST" class="contact-form">
+                        {% csrf_token %}
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="tel" name="phone" placeholder="Your Phone">
+                        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                        <button type="submit" class="btn-submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SHANDILYA GROUP. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

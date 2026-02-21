@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rating Options - JobHai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        .option-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        .option-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .option-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .option-description {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .option-features {
+            text-align: left;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .option-features li {
+            color: #555;
+            margin: 10px 0;
+            font-size: 14px;
+            list-style: none;
+            padding-left: 25px;
+            position: relative;
+        }
+        .option-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .btn-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            transition: opacity 0.3s;
+        }
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⭐ Rating & Review System</h1>
+            <p>Choose the type of rating you want to submit</p>
+        </div>
+
+        <div class="options-grid">
+            <!-- Employee Review Option -->
+            <a href="{% url 'add_review' %}" class="option-card">
+                <div class="option-icon">📝</div>
+                <h2 class="option-title">Employee Review Form</h2>
+                <p class="option-description">
+                    Rate your company and share your work experience
+                </p>
+                <ul class="option-features">
+                    <li>Anonymous review option</li>
+                    <li>Rate work environment, salary, management</li>
+                    <li>Share pros and cons</li>
+                    <li>Help others make informed decisions</li>
+                </ul>
+                <span class="btn-action">Submit Employee Review →</span>
+            </a>
+
+            <!-- Company Rating Option -->
+            <a href="{% url 'add_candidate_rating' %}" class="option-card">
+                <div class="option-icon">⭐</div>
+                <h2 class="option-title">Company → Employee Rating</h2>
+                <p class="option-description">
+                    Rate employee/candidate performance (Employers Only)
+                </p>
+                <ul class="option-features">
+                    <li>Rate interview & work performance</li>
+                    <li>Track employee skills & behavior</li>
+                    <li>Provide constructive feedback</li>
+                    <li>Maintain quality standards</li>
+                </ul>
+                <span class="btn-action">Submit Employee Rating →</span>
+            </a>
+        </div>
+
+        <div class="back-link">
+            <a href="{% url 'home' %}">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

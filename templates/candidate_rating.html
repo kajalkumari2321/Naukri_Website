@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Rating - Company Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            color: #f5576c;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .rating-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .rating-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .rating-item label {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .stars {
+            display: flex;
+            gap: 5px;
+        }
+        .stars input[type="radio"] {
+            display: none;
+        }
+        .stars label {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .stars input[type="radio"]:checked ~ label,
+        .stars label:hover,
+        .stars label:hover ~ label {
+            color: #ff6b6b;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #f5576c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .messages {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f5576c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'employer_dashboard' %}" class="back-link">← Back to Dashboard</a>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <h1>⭐ Company → Employee Rating Form</h1>
+        <p class="subtitle">Rate your employee's performance and skills professionally</p>
+
+        <div class="info-box">
+            <strong>📌 Note:</strong> This rating will help maintain quality standards and provide constructive feedback to employees.
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Basic Candidate Information (Auto Fetch from Profile) -->
+            <div class="form-section">
+                <h3 class="section-title">👤 Basic Candidate Information</h3>
+                <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
+                    <em>Select candidate to auto-fetch their profile information</em>
+                </p>
+                <div class="form-group">
+                    <label>Candidate Name *</label>
+                    <select name="candidate" id="candidate-select" required>
+                        <option value="">Choose Employee/Candidate</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}" data-username="{{ user.username }}" data-email="{{ user.email }}">
+                            {{ user.username }} ({{ user.email }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Candidate ID</label>
+                    <input type="text" id="candidate-id" readonly placeholder="Auto-filled from selection" style="background: #f5f5f5;">
+                </div>
+                <div class="form-group">
+                    <label>Applied For (Job Position) *</label>
+                    <select name="job" required>
+                        <option value="">Choose Job Position</option>
+                        {% for job in jobs %}
+                        <option value="{{ job.id }}">{{ job.title }} - {{ job.company }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Interview Date *</label>
+                    <input type="date" name="interview_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Employment Status *</label>
+                    <select name="employment_status" id="employment-status" required>
+                        <option value="">Select Status</option>
+                        <option value="selected">✅ Selected</option>
+                        <option value="rejected">❌ Rejected</option>
+                        <option value="working">💼 Currently Working</option>
+                        <option value="left">🚪 Left Job</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Performance Rating Section (1–5 Star System) -->
+            <div class="form-section">
+                <h3 class="section-title">📊 Performance Rating Section (1–5 Star System)</h3>
+                
+                <!-- Interview & Selection Stage -->
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #f5576c; margin-bottom: 15px;">⭐ Interview & Selection Stage</h4>
+                    <div class="rating-grid">
+                        <!-- Communication Skills -->
+                        <div class="rating-item">
+                            <label>💬 Communication Skills</label>
+                            <div class="stars">
+                                <input type="radio" name="communication_skills" value="5" id="cs5" required>
+                                <label for="cs5">★</label>
+                                <input type="radio" name="communication_skills" value="4" id="cs4">
+                                <label for="cs4">★</label>
+                                <input type="radio" name="communication_skills" value="3" id="cs3">
+                                <label for="cs3">★</label>
+                                <input type="radio" name="communication_skills" value="2" id="cs2">
+                                <label for="cs2">★</label>
+                                <input type="radio" name="communication_skills" value="1" id="cs1">
+                                <label for="cs1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Technical Knowledge -->
+                        <div class="rating-item">
+                            <label>🔧 Technical Knowledge</label>
+                            <div class="stars">
+                                <input type="radio" name="technical_knowledge" value="5" id="tk5" required>
+                                <label for="tk5">★</label>
+                                <input type="radio" name="technical_knowledge" value="4" id="tk4">
+                                <label for="tk4">★</label>
+                                <input type="radio" name="technical_knowledge" value="3" id="tk3">
+                                <label for="tk3">★</label>
+                                <input type="radio" name="technical_knowledge" value="2" id="tk2">
+                                <label for="tk2">★</label>
+                                <input type="radio" name="technical_knowledge" value="1" id="tk1">
+                                <label for="tk1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Confidence Level -->
+                        <div class="rating-item">
+                            <label>💪 Confidence Level</label>
+                            <div class="stars">
+                                <input type="radio" name="confidence_level" value="5" id="cl5" required>
+                                <label for="cl5">★</label>
+                                <input type="radio" name="confidence_level" value="4" id="cl4">
+                                <label for="cl4">★</label>
+                                <input type="radio" name="confidence_level" value="3" id="cl3">
+                                <label for="cl3">★</label>
+                                <input type="radio" name="confidence_level" value="2" id="cl2">
+                                <label for="cl2">★</label>
+                                <input type="radio" name="confidence_level" value="1" id="cl1">
+                                <label for="cl1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Professional Behaviour -->
+                        <div class="rating-item">
+                            <label>👔 Professional Behaviour</label>
+                            <div class="stars">
+                                <input type="radio" name="professional_behaviour" value="5" id="pb5" required>
+                                <label for="pb5">★</label>
+                                <input type="radio" name="professional_behaviour" value="4" id="pb4">
+                                <label for="pb4">★</label>
+                                <input type="radio" name="professional_behaviour" value="3" id="pb3">
+                                <label for="pb3">★</label>
+                                <input type="radio" name="professional_behaviour" value="2" id="pb2">
+                                <label for="pb2">★</label>
+                                <input type="radio" name="professional_behaviour" value="1" id="pb1">
+                                <label for="pb1">★</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Performance (If Selected) -->
+                <div id="work-performance-section" style="background: #fff3e0; padding: 15px; border-radius: 8px; display: none;">
+                    <h4 style="color: #f5576c; margin-bottom: 15px;">⭐ Work Performance (If Selected/Working)</h4>
+                    <p style="color: #666; font-size: 12px; margin-bottom: 15px;">
+                        <em>Fill this section only if candidate is Selected or Currently Working</em>
+                    </p>
+                    <div class="rating-grid">
+                        <!-- Work Quality -->
+                        <div class="rating-item">
+                            <label>✨ Work Quality</label>
+                            <div class="stars">
+                                <input type="radio" name="work_quality" value="5" id="wq5">
+                                <label for="wq5">★</label>
+                                <input type="radio" name="work_quality" value="4" id="wq4">
+                                <label for="wq4">★</label>
+                                <input type="radio" name="work_quality" value="3" id="wq3">
+                                <label for="wq3">★</label>
+                                <input type="radio" name="work_quality" value="2" id="wq2">
+                                <label for="wq2">★</label>
+                                <input type="radio" name="work_quality" value="1" id="wq1">
+                                <label for="wq1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Punctuality -->
+                        <div class="rating-item">
+                            <label>⏰ Punctuality</label>
+                            <div class="stars">
+                                <input type="radio" name="punctuality" value="5" id="p5">
+                                <label for="p5">★</label>
+                                <input type="radio" name="punctuality" value="4" id="p4">
+                                <label for="p4">★</label>
+                                <input type="radio" name="punctuality" value="3" id="p3">
+                                <label for="p3">★</label>
+                                <input type="radio" name="punctuality" value="2" id="p2">
+                                <label for="p2">★</label>
+                                <input type="radio" name="punctuality" value="1" id="p1">
+                                <label for="p1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Teamwork -->
+                        <div class="rating-item">
+                            <label>🤝 Teamwork</label>
+                            <div class="stars">
+                                <input type="radio" name="teamwork" value="5" id="tw5">
+                                <label for="tw5">★</label>
+                                <input type="radio" name="teamwork" value="4" id="tw4">
+                                <label for="tw4">★</label>
+                                <input type="radio" name="teamwork" value="3" id="tw3">
+                                <label for="tw3">★</label>
+                                <input type="radio" name="teamwork" value="2" id="tw2">
+                                <label for="tw2">★</label>
+                                <input type="radio" name="teamwork" value="1" id="tw1">
+                                <label for="tw1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Learning Ability -->
+                        <div class="rating-item">
+                            <label>📚 Learning Ability</label>
+                            <div class="stars">
+                                <input type="radio" name="learning_ability" value="5" id="la5">
+                                <label for="la5">★</label>
+                                <input type="radio" name="learning_ability" value="4" id="la4">
+                                <label for="la4">★</label>
+                                <input type="radio" name="learning_ability" value="3" id="la3">
+                                <label for="la3">★</label>
+                                <input type="radio" name="learning_ability" value="2" id="la2">
+                                <label for="la2">★</label>
+                                <input type="radio" name="learning_ability" value="1" id="la1">
+                                <label for="la1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Responsibility Level -->
+                        <div class="rating-item">
+                            <label>🎯 Responsibility Level</label>
+                            <div class="stars">
+                                <input type="radio" name="responsibility_level" value="5" id="rl5">
+                                <label for="rl5">★</label>
+                                <input type="radio" name="responsibility_level" value="4" id="rl4">
+                                <label for="rl4">★</label>
+                                <input type="radio" name="responsibility_level" value="3" id="rl3">
+                                <label for="rl3">★</label>
+                                <input type="radio" name="responsibility_level" value="2" id="rl2">
+                                <label for="rl2">★</label>
+                                <input type="radio" name="responsibility_level" value="1" id="rl1">
+                                <label for="rl1">★</label>
+                            </div>
+                        </div>
+
+                        <!-- Target Achievement -->
+                        <div class="rating-item">
+                            <label>🏆 Target Achievement</label>
+                            <div class="stars">
+                                <input type="radio" name="target_achievement" value="5" id="ta5">
+                                <label for="ta5">★</label>
+                                <input type="radio" name="target_achievement" value="4" id="ta4">
+                                <label for="ta4">★</label>
+                                <input type="radio" name="target_achievement" value="3" id="ta3">
+                                <label for="ta3">★</label>
+                                <input type="radio" name="target_achievement" value="2" id="ta2">
+                                <label for="ta2">★</label>
+                                <input type="radio" name="target_achievement" value="1" id="ta1">
+                                <label for="ta1">★</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overall Recommendation -->
+            <div class="form-section">
+                <h3 class="section-title">🎯 Overall Recommendation</h3>
+                <div class="form-group">
+                    <label style="font-size: 16px; font-weight: 600; color: #333;">Would you hire/re-hire this candidate? *</label>
+                    <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s; flex: 1; min-width: 150px;">
+                            <input type="radio" name="recommendation" value="yes" required style="width: 20px; height: 20px;">
+                            <span style="font-size: 24px;">✅</span>
+                            <span style="font-weight: 500;">Yes</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s; flex: 1; min-width: 150px;">
+                            <input type="radio" name="recommendation" value="no" required style="width: 20px; height: 20px;">
+                            <span style="font-size: 24px;">❌</span>
+                            <span style="font-weight: 500;">No</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.3s; flex: 1; min-width: 150px;">
+                            <input type="radio" name="recommendation" value="maybe" required style="width: 20px; height: 20px;">
+                            <span style="font-size: 24px;">🤔</span>
+                            <span style="font-weight: 500;">Maybe</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <p style="margin: 0; color: #f5576c; font-weight: 600; font-size: 18px;">
+                        📊 Overall Rating (Auto Average): <span id="overall-rating">0.0</span> / 5.0
+                    </p>
+                    <small style="color: #888;">Automatically calculated from all ratings above</small>
+                </div>
+            </div>
+
+            <!-- Remarks Section -->
+            <div class="form-section">
+                <h3 class="section-title">📝 Remarks Section</h3>
+                <div class="form-group">
+                    <label>💪 Strengths (Text Box) *</label>
+                    <textarea name="strengths" required placeholder="List the candidate's key strengths and positive qualities... e.g., Excellent problem-solving skills, great team player, quick learner"></textarea>
+                    <small style="color: #888; font-size: 12px;">Minimum 30 characters recommended</small>
+                </div>
+                <div class="form-group">
+                    <label>📈 Areas of Improvement (Text Box) *</label>
+                    <textarea name="areas_of_improvement" required placeholder="Suggest constructive areas where the candidate can improve... e.g., Needs to improve time management, could be more proactive in communication"></textarea>
+                    <small style="color: #888; font-size: 12px;">Minimum 30 characters recommended</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit Rating</button>
+        </form>
+    </div>
+
+    <script>
+        // Auto-fill Candidate ID when candidate is selected
+        const candidateSelect = document.getElementById('candidate-select');
+        const candidateIdInput = document.getElementById('candidate-id');
+        
+        candidateSelect.addEventListener('change', function() {
+            if (this.value) {
+                const selectedOption = this.options[this.selectedIndex];
+                const username = selectedOption.getAttribute('data-username');
+                candidateIdInput.value = `CID-${this.value.padStart(4, '0')} (${username})`;
+            } else {
+                candidateIdInput.value = '';
+            }
+        });
+
+        // Show/Hide Work Performance section based on Employment Status
+        const employmentStatus = document.getElementById('employment-status');
+        const workPerformanceSection = document.getElementById('work-performance-section');
+        const workPerformanceInputs = workPerformanceSection.querySelectorAll('input[type="radio"]');
+
+        employmentStatus.addEventListener('change', function() {
+            if (this.value === 'selected' || this.value === 'working') {
+                workPerformanceSection.style.display = 'block';
+                // Make work performance fields required
+                workPerformanceInputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    const firstInput = document.querySelector(`input[name="${name}"]`);
+                    if (firstInput) firstInput.required = true;
+                });
+            } else {
+                workPerformanceSection.style.display = 'none';
+                // Remove required from work performance fields
+                workPerformanceInputs.forEach(input => {
+                    input.required = false;
+                    input.checked = false;
+                });
+            }
+            calculateOverallRating();
+        });
+
+        // Auto-calculate overall rating
+        const allRatingInputs = document.querySelectorAll('input[type="radio"]');
+        const overallRatingDisplay = document.getElementById('overall-rating');
+
+        function calculateOverallRating() {
+            const ratingCategories = [
+                'communication_skills',
+                'technical_knowledge',
+                'confidence_level',
+                'professional_behaviour'
+            ];
+
+            // Add work performance categories if visible
+            if (workPerformanceSection.style.display !== 'none') {
+                ratingCategories.push(
+                    'work_quality',
+                    'punctuality',
+                    'teamwork',
+                    'learning_ability',
+                    'responsibility_level',
+                    'target_achievement'
+                );
+            }
+
+            let total = 0;
+            let count = 0;
+
+            ratingCategories.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    total += parseInt(selected.value);
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                const average = (total / count).toFixed(1);
+                overallRatingDisplay.textContent = average;
+                overallRatingDisplay.style.fontSize = '24px';
+            } else {
+                overallRatingDisplay.textContent = '0.0';
+            }
+        }
+
+        allRatingInputs.forEach(input => {
+            input.addEventListener('change', calculateOverallRating);
+        });
+
+        // Highlight selected recommendation option
+        const recommendOptions = document.querySelectorAll('input[name="recommendation"]');
+        recommendOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                // Remove highlight from all
+                document.querySelectorAll('input[name="recommendation"]').forEach(opt => {
+                    opt.parentElement.style.borderColor = '#e0e0e0';
+                    opt.parentElement.style.background = 'white';
+                });
+                // Highlight selected
+                if (this.value === 'yes') {
+                    this.parentElement.style.borderColor = '#4caf50';
+                    this.parentElement.style.background = '#f1f8f4';
+                } else if (this.value === 'no') {
+                    this.parentElement.style.borderColor = '#f44336';
+                    this.parentElement.style.background = '#fef5f5';
+                } else {
+                    this.parentElement.style.borderColor = '#ff9800';
+                    this.parentElement.style.background = '#fff8f0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job.title }} - SHANDILYA GROUP S</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">My Jobs</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/#jobs">Jobs</a></li>
+                     <li><a href="# Employee rating & review system">Employee rating & review system</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Job Detail Section -->
+    <section class="job-detail">
+        <div class="container">
+            <div class="detail-card">
+                <div class="detail-image">
+                    <img src="{{ job.image }}" alt="{{ job.company }}">
+                </div>
+
+                <div class="detail-content">
+                    <h1>{{ job.title }}</h1>
+                    <h2>🏢 <a href="{% url 'company_profile' job.company %}" style="color: #667eea; text-decoration: none;">{{ job.company }}</a></h2>
+                    <p class="detail-info">📍 {{ job.location }}</p>
+                    <p class="detail-info">💰 {{ job.salary }}</p>
+                    <p class="detail-info">📅 {{ job.posted_date|date:"d M Y" }}</p>
+
+                    <div class="description">
+                        <h3>Job Description</h3>
+                        <p>{{ job.description }}</p>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'apply_job' job.pk %}" class="btn-apply-large">Apply Now</a>
+                    {% else %}
+                        <a href="{% url 'login_view' %}?next={% url 'apply_job' job.pk %}" class="btn-apply-large">Login to Apply</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ⭐ Rating & Review Section -->
+            <div class="review-section">
+                <h2>Employee Reviews & Ratings</h2>
+
+                <!-- Average Rating -->
+                <div class="average-rating">
+                    <strong>Average Rating:</strong>
+                    ⭐ {{ job.average_rating|default:"0" }}/5
+                </div>
+
+                <!-- Review List -->
+                <div class="review-list">
+                    {% for review in reviews %}
+                        <div class="review-card">
+                            <p><strong>{{ review.user.username }}</strong></p>
+                            <p>Rating: ⭐ {{ review.rating }}/5</p>
+                            <p>{{ review.comment }}</p>
+                            <small>{{ review.created_at|date:"d M Y" }}</small>
+                        </div>
+                    {% empty %}
+                        <p>No reviews yet. <a href="{% url 'add_review' %}" style="color: #667eea; font-weight: 600; text-decoration: underline;">Be the first to review!</a></p>
+                    {% endfor %}
+                </div>
+
+                <!-- Review Form -->
+                <div class="review-form">
+                    <h3>Submit Your Review</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <label for="rating">Rating (1–5):</label>
+                        <select name="rating" required>
+                            <option value="">Select Rating</option>
+                            <option value="1">1 ⭐</option>
+                            <option value="2">2 ⭐⭐</option>
+                            <option value="3">3 ⭐⭐⭐</option>
+                            <option value="4">4 ⭐⭐⭐⭐</option>
+                            <option value="5">5 ⭐⭐⭐⭐⭐</option>
+                        </select>
+
+                        <label for="comment">Comment:</label>
+                        <textarea name="comment" rows="4" required></textarea>
+
+                        <button type="submit" class="btn-submit-review">
+                            Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 My Jobs. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

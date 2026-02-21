@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Job Hai</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .notifications-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 20px;
+        }
+        .notification-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .notification-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .notification-actions a {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pending { background: #ffeaa7; color: #d63031; }
+        .status-accepted { background: #55efc4; color: #00b894; }
+        .status-rejected { background: #fab1a0; color: #d63031; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo"><a href="/" style="color: white; text-decoration: none;">SHANDILYA CONSULTANCY</a></h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% if user.userprofile.role == 'employer' %}{% url 'employer_dashboard' %}{% else %}{% url 'seeker_dashboard' %}{% endif %}">Dashboard</a></li>
+                    <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="notifications-container">
+        <h1 style="margin-bottom: 30px;">🔔 Notifications</h1>
+        
+        {% if applications %}
+            {% for app in applications %}
+            <div class="notification-card">
+                <div class="notification-info">
+                    {% if user.userprofile.role == 'employer' %}
+                        <h3>New Application: {{ app.job.title }}</h3>
+                        <p><strong>Applicant:</strong> {{ app.applicant.get_full_name|default:app.applicant.username }}</p>
+                        <p><strong>Email:</strong> {{ app.applicant.email }}</p>
+                        <p><strong>Phone:</strong> {{ app.applicant.userprofile.phone }}</p>
+                    {% else %}
+                        <h3>{{ app.job.title }}</h3>
+                        <p><strong>Company:</strong> {{ app.job.company }}</p>
+                        <p><strong>Location:</strong> {{ app.job.location }}</p>
+                    {% endif %}
+                    <p><strong>Applied:</strong> {{ app.applied_date|date:"d M Y, h:i A" }}</p>
+                    <span class="status-badge status-{{ app.status }}">{{ app.status|upper }}</span>
+                </div>
+                <div class="notification-actions">
+                    {% if user.userprofile.role == 'employer' %}
+                        <a href="{% url 'seeker_profile' app.applicant.username %}">View Profile</a>
+                    {% else %}
+                        <a href="{% url 'job_detail' app.job.pk %}">View Job</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="notification-card">
+                <p style="margin: 0; color: #666;">No notifications yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

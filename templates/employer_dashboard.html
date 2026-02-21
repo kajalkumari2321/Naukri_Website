@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">Job Hai</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url 'candidates_list' %}">👥 Candidates</a></li>
+                    <li><a href="{% url 'notifications' %}">🔔 Notifications</a></li>
+                    <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="dashboard-section">
+        <div class="container">
+            <h2>Welcome, {{ profile.company_name }}! 🏢</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="dashboard-card">
+                <h3>📝 Post New Job</h3>
+                <form method="POST" class="job-form">
+                    {% csrf_token %}
+                    <input type="text" name="title" placeholder="Job Title" required>
+                    <input type="text" name="company" placeholder="Company Name" required>
+                    <input type="text" name="location" placeholder="Location" required>
+                    <input type="text" name="salary" placeholder="Salary (e.g., ₹5-8 LPA)" required>
+                    <textarea name="description" placeholder="Job Description" rows="4" required></textarea>
+                    <input type="url" name="image" placeholder="Image URL (optional)">
+                    <button type="submit" class="btn-submit">Post Job</button>
+                </form>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>📊 Your Posted Jobs ({{ jobs.count }})</h3>
+                <div class="jobs-list">
+                    {% for job in jobs %}
+                        <a href="{% url 'job_detail' job.pk %}" class="job-item-link">
+                            <div class="job-item-employer">
+                                <div class="job-item-image">
+                                    <img src="{{ job.image }}" alt="{{ job.title }}">
+                                </div>
+                                <div class="job-item-content">
+                                    <h4>{{ job.title }}</h4>
+                                    <p>🏢 {{ job.company }}</p>
+                                    <p>📍 {{ job.location }} - 💰 {{ job.salary }}</p>
+                                    <p class="job-date">📅 Posted: {{ job.posted_date|date:"d M Y" }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p>No jobs posted yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>👥 Browse Candidates</h3>
+                <p style="margin: 15px 0; color: #666;">View all registered job seekers and their profiles</p>
+                <a href="{% url 'candidates_list' %}" class="btn-submit" style="display: inline-block; text-decoration: none; padding: 12px 30px;">View All Candidates</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
