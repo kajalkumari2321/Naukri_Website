@@ -1,157 +1,169 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ profile.user.get_full_name|default:profile.user.username }} - Candidate Profile</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
-        <div class="container">
-            <h1 class="logo">🚀 Job Portal</h1>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">🚀 Job Portal</h1>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url 'rating_options' %}" class="btn-register-new" target="_blank">Rating</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-<section class="profile-view-section">
-    <div class="container">
-        <div class="profile-layout">
-            
-            <!-- Left Sidebar -->
-            <div class="profile-sidebar">
-                <div class="profile-photo-box">
-                    
-                    <!-- Profile Image -->
-                    <div class="profile-photo">
-                        {% if profile.profile_image %}
+    <section class="profile-view-section">
+        <div class="container">
+            <div class="profile-layout">
+
+                <!-- Left Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-photo-box">
+
+                        <!-- Profile Image -->
+                        <div class="profile-photo">
+                            {% if profile.profile_image %}
                             <img src="{{ profile.profile_image.url }}" alt="Profile Image">
-                        {% else %}
-                            <img src="https://ui-avatars.com/api/?name={{ profile.user.username }}&size=200&background=667eea&color=fff" alt="Profile Image">
+                            {% else %}
+                            <img src="https://ui-avatars.com/api/?name={{ profile.user.username }}&size=200&background=667eea&color=fff"
+                                alt="Profile Image">
+                            {% endif %}
+                        </div>
+
+                        <h2>{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+                        <p class="profile-headline">{{ profile.resume_headline|default:"Professional Candidate" }}</p>
+                        <p class="profile-location">📍 {{ profile.location|default:"India" }}</p>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="profile-contact-box">
+                        <h3>Contact Information</h3>
+                        <p><strong>Phone:</strong> {{ profile.phone|default:"Not provided" }}</p>
+                        <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                        {% if profile.expected_salary %}
+                        <p><strong>Expected Salary:</strong> {{ profile.expected_salary }}</p>
                         {% endif %}
                     </div>
 
-                    <h2>{{ profile.user.get_full_name|default:profile.user.username }}</h2>
-                    <p class="profile-headline">{{ profile.resume_headline|default:"Professional Candidate" }}</p>
-                    <p class="profile-location">📍 {{ profile.location|default:"India" }}</p>
+                    <!-- Action Buttons -->
+                    <div class="profile-actions-box">
+                        {% if profile.phone %}
+                        <button class="btn-action-full" onclick="alert('📞 Phone: {{ profile.phone }}')">📞 View
+                            Number</button>
+                        {% endif %}
+                        {% if profile.whatsapp %}
+                        <a href="https://wa.me/{{ profile.whatsapp|cut:' ' }}?text=Hello, I found your profile on Job Hai portal"
+                            target="_blank" class="btn-action-full">💬 Send Message</a>
+                        {% endif %}
+                        <button class="btn-action-full btn-invite-full"
+                            onclick="alert('📧 Email: {{ profile.user.email }}\n\nYou can send interview invitation to this email.')">📧
+                            Invite for Interview</button>
+                        <a href="{% url 'rating_options' %}" target="_blank" class="btn-action-full"
+                            style="text-align:center; background: linear-gradient(135deg, #f7971e, #ffd200); color: #333; font-weight: 600;">⭐
+                            Rate this Candidate</a>
+                    </div>
                 </div>
 
-                <!-- Contact Information -->
-                <div class="profile-contact-box">
-                    <h3>Contact Information</h3>
-                    <p><strong>Phone:</strong> {{ profile.phone|default:"Not provided" }}</p>
-                    <p><strong>Email:</strong> {{ profile.user.email }}</p>
-                    {% if profile.expected_salary %}
-                    <p><strong>Expected Salary:</strong> {{ profile.expected_salary }}</p>
+                <!-- Right Content -->
+                <div class="profile-content">
+
+                    <!-- Resume Headline -->
+                    {% if profile.resume_headline %}
+                    <div class="content-box">
+                        <h3>Resume Headline</h3>
+                        <p>{{ profile.resume_headline }}</p>
+                    </div>
                     {% endif %}
-                </div>
 
-                <!-- Action Buttons -->
-                <div class="profile-actions-box">
-                    {% if profile.phone %}
-                        <button class="btn-action-full" onclick="alert('📞 Phone: {{ profile.phone }}')">📞 View Number</button>
-                    {% endif %}
-                    {% if profile.whatsapp %}
-                        <a href="https://wa.me/{{ profile.whatsapp|cut:' ' }}?text=Hello, I found your profile on Job Hai portal" target="_blank" class="btn-action-full">💬 Send Message</a>
-                    {% endif %}
-                    <button class="btn-action-full btn-invite-full" onclick="alert('📧 Email: {{ profile.user.email }}\n\nYou can send interview invitation to this email.')">📧 Invite for Interview</button>
-                </div>
-            </div>
-
-            <!-- Right Content -->
-            <div class="profile-content">
-
-                <!-- Resume Headline -->
-                {% if profile.resume_headline %}
-                <div class="content-box">
-                    <h3>Resume Headline</h3>
-                    <p>{{ profile.resume_headline }}</p>
-                </div>
-                {% endif %}
-
-                <!-- Key Skills -->
-                <div class="content-box">
-                    <h3>Key Skills</h3>
-                    {% if profile.key_skills %}
+                    <!-- Key Skills -->
+                    <div class="content-box">
+                        <h3>Key Skills</h3>
+                        {% if profile.key_skills %}
                         <div class="skills-tags">
                             {% for skill in profile.key_skills.split %}
-                                <span class="skill-tag">{{ skill }}</span>
+                            <span class="skill-tag">{{ skill }}</span>
                             {% endfor %}
                         </div>
-                    {% else %}
+                        {% else %}
                         <p>No skills added yet.</p>
-                    {% endif %}
-                </div>
+                        {% endif %}
+                    </div>
 
-                <!-- Work Experience -->
-                <div class="content-box">
-                    <h3>Work Experience</h3>
-                    {% if profile.employment %}
+                    <!-- Work Experience -->
+                    <div class="content-box">
+                        <h3>Work Experience</h3>
+                        {% if profile.employment %}
                         <p>{{ profile.employment|linebreaks }}</p>
-                    {% else %}
+                        {% else %}
                         <p>No work experience added yet.</p>
-                    {% endif %}
-                </div>
+                        {% endif %}
+                    </div>
 
-                <!-- Education -->
-                <div class="content-box">
-                    <h3>Education</h3>
-                    <p><strong>Degree:</strong> {{ profile.degree|default:"Not specified" }}</p>
-                    {% if profile.education %}
+                    <!-- Education -->
+                    <div class="content-box">
+                        <h3>Education</h3>
+                        <p><strong>Degree:</strong> {{ profile.degree|default:"Not specified" }}</p>
+                        {% if profile.education %}
                         <p>{{ profile.education|linebreaks }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- IT Skills -->
+                    {% if profile.it_skills %}
+                    <div class="content-box">
+                        <h3>IT Skills</h3>
+                        <p>{{ profile.it_skills|linebreaks }}</p>
+                    </div>
                     {% endif %}
-                </div>
 
-                <!-- IT Skills -->
-                {% if profile.it_skills %}
-                <div class="content-box">
-                    <h3>IT Skills</h3>
-                    <p>{{ profile.it_skills|linebreaks }}</p>
-                </div>
-                {% endif %}
+                    <!-- Projects -->
+                    {% if profile.projects %}
+                    <div class="content-box">
+                        <h3>Projects</h3>
+                        <p>{{ profile.projects|linebreaks }}</p>
+                    </div>
+                    {% endif %}
 
-                <!-- Projects -->
-                {% if profile.projects %}
-                <div class="content-box">
-                    <h3>Projects</h3>
-                    <p>{{ profile.projects|linebreaks }}</p>
-                </div>
-                {% endif %}
+                    <!-- Profile Summary -->
+                    {% if profile.profile_summary %}
+                    <div class="content-box">
+                        <h3>Profile Summary</h3>
+                        <p>{{ profile.profile_summary|linebreaks }}</p>
+                    </div>
+                    {% endif %}
 
-                <!-- Profile Summary -->
-                {% if profile.profile_summary %}
-                <div class="content-box">
-                    <h3>Profile Summary</h3>
-                    <p>{{ profile.profile_summary|linebreaks }}</p>
-                </div>
-                {% endif %}
-
-                <!-- Documents -->
-                <div class="content-box">
-                    <h3>Documents</h3>
-                    {% if profile.resume %}
+                    <!-- Documents -->
+                    <div class="content-box">
+                        <h3>Documents</h3>
+                        {% if profile.resume %}
                         <p><a href="{{ profile.resume.url }}" target="_blank">Download Resume</a></p>
-                    {% else %}
+                        {% else %}
                         <p>No documents uploaded.</p>
-                    {% endif %}
-                </div>
+                        {% endif %}
+                    </div>
 
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<footer>
-    <div class="container">
-        <p>&copy; 2026 Job Portal. All Rights Reserved.</p>
-    </div>
-</footer>
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Job Portal. All Rights Reserved.</p>
+        </div>
+    </footer>
 
 </body>
+
 </html>
