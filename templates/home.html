@@ -2,6 +2,7 @@
 {% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,88 +10,619 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
         /* Naukri.com Style CSS */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; background: #f7f8fa; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f8fa;
+        }
+
         /* Top Bar */
-        .top-bar { background: #fff; border-bottom: 1px solid #e0e6f7; padding: 10px 0; }
-        .top-bar .container { display: flex; justify-content: space-between; align-items: center; }
-        .top-bar-links { display: flex; gap: 20px; font-size: 13px; }
-        .top-bar-links a { color: #445578; text-decoration: none; }
-        .top-bar-links a:hover { color: #4a90e2; }
-        
+        .top-bar {
+            background: #fff;
+            border-bottom: 1px solid #e0e6f7;
+            padding: 10px 0;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar-links {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+        }
+
+        .top-bar-links a {
+            color: #445578;
+            text-decoration: none;
+        }
+
+        .top-bar-links a:hover {
+            color: #4a90e2;
+        }
+
         /* Main Navbar */
-        .main-navbar { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
-        .main-navbar .container { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
-        .logo-naukri { font-size: 28px; font-weight: bold; color: #4a90e2; text-decoration: none; }
-        .nav-menu { display: flex; gap: 30px; align-items: center; list-style: none; }
-        .nav-menu a { color: #445578; text-decoration: none; font-weight: 500; font-size: 15px; }
-        .nav-menu a:hover { color: #4a90e2; }
-        .nav-icons { display: flex; gap: 20px; align-items: center; }
-        .icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; position: relative; }
-        .badge { position: absolute; top: -5px; right: -8px; background: #ff6b6b; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; }
-        .btn-login-new { padding: 8px 20px; border: 1px solid #4a90e2; color: #4a90e2; border-radius: 20px; text-decoration: none; font-weight: 500; }
-        .btn-register-new { padding: 8px 20px; background: #4a90e2; color: white; border-radius: 20px; text-decoration: none; font-weight: 500; margin-left: 10px; }
-        .btn-register-new:hover, .btn-login-new:hover { opacity: 0.9; }
-        
+        .main-navbar {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo-naukri {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: #445578;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-menu a:hover {
+            color: #4a90e2;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-login-new {
+            padding: 8px 20px;
+            border: 1px solid #4a90e2;
+            color: #4a90e2;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-register-new {
+            padding: 8px 20px;
+            background: #4a90e2;
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .btn-register-new:hover,
+        .btn-login-new:hover {
+            opacity: 0.9;
+        }
+
         /* Hero Section */
-        .hero-naukri { background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); padding: 60px 20px; text-align: center; color: white; }
-        .hero-naukri h1 { font-size: 42px; margin-bottom: 15px; font-weight: 700; }
-        .hero-naukri p { font-size: 18px; margin-bottom: 30px; opacity: 0.95; }
-        .search-container { max-width: 900px; margin: 0 auto; background: white; border-radius: 50px; padding: 8px; display: flex; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .search-input { flex: 1; border: none; padding: 15px 25px; font-size: 16px; outline: none; }
-        .search-btn { background: #ff6b6b; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; }
-        .search-btn:hover { background: #ff5252; }
-        
+        .hero-naukri {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-naukri h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero-naukri p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .search-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 50px;
+            padding: 8px;
+            display: flex;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background: #ff5252;
+        }
+
         /* Quick Links */
-        .quick-links-section { background: white; padding: 20px 0; border-bottom: 1px solid #e0e6f7; }
-        .quick-links { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-        .quick-link { color: #445578; text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 20px; border: 1px solid #e0e6f7; }
-        .quick-link:hover { background: #f0f4ff; color: #4a90e2; }
-        
+        .quick-links-section {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e6f7;
+        }
+
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            color: #445578;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #e0e6f7;
+        }
+
+        .quick-link:hover {
+            background: #f0f4ff;
+            color: #4a90e2;
+        }
+
         /* Jobs Section */
-        .jobs-section-new { padding: 40px 20px; background: #f7f8fa; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .section-title-new { font-size: 24px; color: #333; font-weight: 600; }
-        .view-all-link { color: #4a90e2; text-decoration: none; font-weight: 500; }
-        
+        .jobs-section-new {
+            padding: 40px 20px;
+            background: #f7f8fa;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title-new {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .view-all-link {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
         /* Job Cards */
-        .jobs-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .job-card-new { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.3s; cursor: pointer; border: 1px solid #e0e6f7; }
-        .job-card-new:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
-        .job-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .job-title-new { font-size: 18px; color: #333; font-weight: 600; margin-bottom: 8px; }
-        .company-logo { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; }
-        .company-name-new { color: #666; font-size: 15px; margin-bottom: 10px; }
-        .job-info { display: flex; gap: 15px; margin: 10px 0; flex-wrap: wrap; }
-        .info-item { display: flex; align-items: center; gap: 5px; color: #666; font-size: 13px; }
-        .job-tags { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
-        .tag { background: #f0f4ff; color: #4a90e2; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
-        .job-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f0f0f0; }
-        .posted-date { color: #999; font-size: 12px; }
-        .btn-apply-new { background: #4a90e2; color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 500; }
-        .btn-apply-new:hover { background: #357abd; }
-        
+        .jobs-grid-new {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card-new {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid #e0e6f7;
+        }
+
+        .job-card-new:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .job-title-new {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .company-name-new {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .job-info {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f0f4ff;
+            color: #4a90e2;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .posted-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .btn-apply-new {
+            background: #4a90e2;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-apply-new:hover {
+            background: #357abd;
+        }
+
         /* Stats Section */
-        .stats-section { background: white; padding: 40px 20px; margin: 40px 0; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
-        .stat-item h3 { font-size: 36px; color: #4a90e2; font-weight: 700; }
-        .stat-item p { color: #666; margin-top: 8px; }
-        
+        .stats-section {
+            background: white;
+            padding: 40px 20px;
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 36px;
+            color: #4a90e2;
+            font-weight: 700;
+        }
+
+        .stat-item p {
+            color: #666;
+            margin-top: 8px;
+        }
+
         /* Companies Section */
-        .companies-section { padding: 40px 20px; background: #f7f8fa; }
-        .companies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; margin-top: 25px; }
-        .company-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .company-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        
+        .companies-section {
+            padding: 40px 20px;
+            background: #f7f8fa;
+        }
+
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .company-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .company-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .jobs-grid-new { grid-template-columns: 1fr; }
-            .search-container { flex-direction: column; border-radius: 10px; }
-            .search-btn { border-radius: 10px; }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .jobs-grid-new {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+
+            .search-btn {
+                border-radius: 10px;
+            }
+        }
+
+        /* ====== Employee Reviews Section ====== */
+        .reviews-section {
+            background: linear-gradient(135deg, #f0f4ff 0%, #fff 100%);
+            padding: 50px 20px;
+            border-top: 3px solid #e0e6f7;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+            margin-top: 28px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.10);
+            border: 1px solid #e0e6f7;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-card::before {
+            content: '❝';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 48px;
+            color: #e8f0fe;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 8px 28px rgba(74, 144, 226, 0.18);
+            transform: translateY(-3px);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .review-meta h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .review-meta p {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .review-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .review-badge.former {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .stars {
+            color: #f5a623;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .overall-rating-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .review-body {
+            margin-bottom: 14px;
+        }
+
+        .review-pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .pros-box,
+        .cons-box {
+            background: #f8fffe;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .pros-box {
+            border-left: 3px solid #4caf50;
+            background: #f1fff4;
+        }
+
+        .cons-box {
+            border-left: 3px solid #ff7043;
+            background: #fff5f2;
+        }
+
+        .pros-box strong,
+        .cons-box strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pros-box strong {
+            color: #2e7d32;
+        }
+
+        .cons-box strong {
+            color: #c62828;
+        }
+
+        .review-recommend {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .recommend-yes {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .recommend-no {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .review-date {
+            font-size: 11px;
+            color: #bbb;
+            margin-top: 8px;
+        }
+
+        .no-reviews-msg {
+            text-align: center;
+            color: #aaa;
+            font-size: 16px;
+            padding: 40px;
+            grid-column: 1/-1;
+        }
+
+        @media (max-width: 768px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .review-pros-cons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
@@ -102,9 +634,9 @@
             </div>
             <div class="top-bar-links">
                 {% if user.is_authenticated %}
-                    <span style="color: #4a90e2; font-weight: 500;">Welcome, {{ user.username }}!</span>
+                <span style="color: #4a90e2; font-weight: 500;">Welcome, {{ user.username }}!</span>
                 {% else %}
-                    <a href="{% url 'register' %}">Register for Free</a>
+                <a href="{% url 'register' %}">Register for Free</a>
                 {% endif %}
             </div>
         </div>
@@ -121,20 +653,21 @@
             </ul>
             <div class="nav-icons">
                 {% if user.is_authenticated %}
-                    {% if user.userprofile.role == 'employer' %}
-                        <a href="{% url 'candidates_list' %}" class="icon-btn" title="Candidates">👥</a>
-                    {% endif %}
-                    <a href="{% url 'notifications' %}" class="icon-btn" title="Notifications">
-                        🔔
-                        <span class="badge">3</span>
-                    </a>
-                    <a href="{% if user.userprofile.role == 'employer' %}{% url 'employer_dashboard' %}{% else %}{% url 'seeker_dashboard' %}{% endif %}" class="btn-login-new">Dashboard</a>
-                    <a href="{% url 'logout_view' %}" class="btn-register-new">Logout</a>
+                {% if user.userprofile.role == 'employer' %}
+                <a href="{% url 'candidates_list' %}" class="icon-btn" title="Candidates">👥</a>
+                {% endif %}
+                <a href="{% url 'notifications' %}" class="icon-btn" title="Notifications">
+                    🔔
+                    <span class="badge">3</span>
+                </a>
+                <a href="{% if user.userprofile.role == 'employer' %}{% url 'employer_dashboard' %}{% else %}{% url 'seeker_dashboard' %}{% endif %}"
+                    class="btn-login-new">Dashboard</a>
+                <a href="{% url 'logout_view' %}" class="btn-register-new">Logout</a>
                 {% else %}
-                    <a href="{% url 'login_view' %}" class="btn-login-new">Login</a>
-                    <a href="{% url 'register' %}" class="btn-register-new">Register</a>
-                    <a href="{% url 'rating_options' %}" class="btn-register-new" target="_blank">Rating</a>
-                {% endif %} 
+                <a href="{% url 'login_view' %}" class="btn-login-new">Login</a>
+                <a href="{% url 'register' %}" class="btn-register-new">Register</a>
+                <!-- <a href="{% url 'rating_options' %}" class="btn-register-new" target="_blank">Rating</a> -->
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -144,7 +677,8 @@
         <h1>Find your dream job now</h1>
         <p>{{ jobs.count }} jobs available across India</p>
         <form method="GET" action="/" class="search-container">
-            <input type="text" name="search" class="search-input" placeholder="Enter skills / designations / companies" value="{{ request.GET.search }}">
+            <input type="text" name="search" class="search-input" placeholder="Enter skills / designations / companies"
+                value="{{ request.GET.search }}">
             <button type="submit" class="search-btn">Search Jobs</button>
         </form>
     </section>
@@ -172,7 +706,8 @@
             </div>
             <div class="jobs-grid-new">
                 {% for job in jobs %}
-                <div class="job-card-new" onclick="window.location.href='{% url 'job_detail' job.pk %}'">
+                <a href="{% url 'job_detail' job.pk %}" class="job-card-new"
+                    style="display:block;text-decoration:none;color:inherit;">
                     <div class="job-header">
                         <div>
                             <h3 class="job-title-new">{{ job.title }}</h3>
@@ -190,9 +725,10 @@
                     </div>
                     <div class="job-footer">
                         <span class="posted-date">Posted {{ job.posted_date|timesince }} ago</span>
-                        <a href="{% url 'apply_job' job.pk %}" class="btn-apply-new" onclick="event.stopPropagation();">Apply</a>
+                        <a href="{% url 'apply_job' job.pk %}" class="btn-apply-new"
+                            onclick="event.stopPropagation();">Apply</a>
                     </div>
-                </div>
+                </a>
                 {% empty %}
                 <p style="text-align: center; color: #666; grid-column: 1/-1;">No jobs available at the moment</p>
                 {% endfor %}
@@ -278,7 +814,8 @@
             </div>
             <div class="jobs-grid-new">
                 {% for seeker in seekers %}
-                <div class="job-card-new" onclick="window.location.href='{% url 'seeker_profile' seeker.user.username %}'">
+                <a href="{% url 'seeker_profile' seeker.user.username %}" class="job-card-new"
+                    style="display:block;text-decoration:none;color:inherit;">
                     <h3 class="job-title-new">{{ seeker.user.get_full_name|default:seeker.user.username }}</h3>
                     <p class="company-name-new">{{ seeker.resume_headline|default:"Job Seeker" }}</p>
                     <div class="job-info">
@@ -287,14 +824,15 @@
                     </div>
                     <div class="job-tags">
                         {% for skill in seeker.key_skills|slice:":30"|split:"," %}
-                            <span class="tag">{{ skill|trim }}</span>
+                        <span class="tag">{{ skill|trim }}</span>
                         {% endfor %}
                     </div>
                     <div class="job-footer">
                         <span class="posted-date">Available</span>
-                        <a href="{% url 'seeker_profile' seeker.user.username %}" class="btn-apply-new" onclick="event.stopPropagation();">View Profile</a>
+                        <a href="{% url 'seeker_profile' seeker.user.username %}" class="btn-apply-new"
+                            onclick="event.stopPropagation();">View Profile</a>
                     </div>
-                </div>
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -357,13 +895,77 @@
         </div>
     </section>
 
+    <!-- Employee Reviews Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title-new">⭐ Employee Reviews</h2>
+                <a href="{% url 'add_review' %}" class="btn-register-new" style="text-decoration:none;">+ Write a
+                    Review</a>
+            </div>
+            <div class="reviews-grid">
+                {% for review in employee_reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">
+                            {% if review.full_name %}{{ review.full_name|slice:":1"|upper }}{% else %}A{% endif %}
+                        </div>
+                        <div class="review-meta">
+                            <h4>{{ review.full_name|default:"Anonymous" }}</h4>
+                            <p>{{ review.designation }} &bull; {{ review.department }}</p>
+                            {% if review.employee_type == 'current' %}
+                            <span class="review-badge">🟢 Current Employee</span>
+                            {% else %}
+                            <span class="review-badge former">🟡 Former Employee</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="stars">
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= review.overall_rating %}⭐{% else %}☆{% endif %} {% endfor %} <span
+                            class="overall-rating-badge">{{ review.overall_rating }}/5</span>
+                    </div>
+
+                    <div class="review-pros-cons">
+                        <div class="pros-box">
+                            <strong>✅ Pros</strong>
+                            {{ review.pros|truncatewords:15 }}
+                        </div>
+                        <div class="cons-box">
+                            <strong>❌ Cons</strong>
+                            {{ review.cons|truncatewords:15 }}
+                        </div>
+                    </div>
+
+                    <div class="review-recommend">
+                        Recommend:
+                        {% if review.recommend %}
+                        <span class="recommend-yes">👍 Yes</span>
+                        {% else %}
+                        <span class="recommend-no">👎 No</span>
+                        {% endif %}
+                        &bull; {{ review.work_location }}
+                    </div>
+                    <div class="review-date">{{ review.created_at|date:"d M Y" }}</div>
+                </div>
+                {% empty %}
+                <div class="no-reviews-msg">
+                    <p>🌟 Koi bhi review abhi tak submit nahi hua.</p>
+                    <a href="{% url 'add_review' %}" style="color:#4a90e2; font-weight:600;">Pehla review likhein →</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <h2>SHANDILYA GROUP</h2>
                 <h3>(GROUP OF COMPANY)</h3>
                 <p class="footer-tagline">Education | Training | Placement | Finance | Marketing</p>
-                
+
                 <div class="footer-grid">
                     <div class="footer-section">
                         <h4>📚 Education Courses</h4>
@@ -373,7 +975,7 @@
                             <li>Computer Courses</li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>💼 Professional Training</h4>
                         <ul>
@@ -383,7 +985,7 @@
                             <li>Accounting Practice Training</li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>⚖️ Legal & Tax Services</h4>
                         <ul>
@@ -393,7 +995,7 @@
                             <li>Legal Consultancy</li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>📞 Contact Us</h4>
                         <ul>
@@ -403,12 +1005,14 @@
                         </ul>
                     </div>
                 </div>
-                
-                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #aaa;">
+
+                <div
+                    style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #aaa;">
                     <p>&copy; 2024 JobHai.com - All Rights Reserved | Powered by SHANDILYA GROUP</p>
                 </div>
             </div>
         </div>
     </footer>
 </body>
-</html> 
+
+</html>

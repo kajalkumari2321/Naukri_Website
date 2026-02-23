@@ -29,9 +29,12 @@ def home(request):
         role='seeker'
     ).exclude(resume_headline='').order_by('-id')[:6]
 
+    employee_reviews = EmployeeReview.objects.order_by('-created_at')[:6]
+
     return render(request, 'home.html', {
         'jobs': jobs,
-        'seekers': seekers
+        'seekers': seekers,
+        'employee_reviews': employee_reviews,
     })
 
 
